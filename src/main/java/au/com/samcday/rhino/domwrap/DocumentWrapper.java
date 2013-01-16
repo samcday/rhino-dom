@@ -58,7 +58,7 @@ public class DocumentWrapper extends NodeWrapper implements Document {
     @Override
     @JSFunction
     public Text createTextNode(String data) {
-        return (Text)NodeWrapper.wrap(this.document.createTextNode(data), this.getParentScope());
+        return (Text) DomWrap.wrap(this.document.createTextNode(data), this.getParentScope());
     }
 
     @Override
@@ -87,8 +87,9 @@ public class DocumentWrapper extends NodeWrapper implements Document {
     }
 
     @Override
+    @JSFunction
     public NodeList getElementsByTagName(String tagname) {
-        return null;  //To change body of implemented methods use File | Settings | File Templates.
+        return DomWrap.wrap(this.document.getElementsByTagName(tagname), this.getParentScope());
     }
 
     @Override

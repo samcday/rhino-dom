@@ -11,33 +11,6 @@ import org.w3c.dom.Node;
 public class NodeWrapper extends ScriptableObject implements Node {
     private Node node;
 
-    /**
-     * Wraps a provided Node with the most relevant Wrap* class. e.g if a Element is provided it will be wrapped using
-     * WrappedElement, Comment would be wrapped with WrappedComment, etc.
-     * @param node
-     * @param scope
-     * @return
-     */
-    public static <T extends NodeWrapper> T wrap(Node node, Scriptable scope) {
-        FunctionObject constructor = null;
-        if(node instanceof Document) {
-            constructor = (FunctionObject)scope.get("Document", scope);
-        }
-        else if(node instanceof Text) {
-            constructor = (FunctionObject)scope.get("Text", scope);
-        }
-        if(node instanceof Element) {
-            //
-
-        }
-
-        if(constructor != null) {
-            return (T)constructor.construct(Context.getCurrentContext(), scope, new Object[] { node });
-        }
-
-        return null;
-    }
-
     public NodeWrapper() { }
     public NodeWrapper(Node node) {
         this.node = node;
@@ -101,8 +74,9 @@ public class NodeWrapper extends ScriptableObject implements Node {
     }
 
     @Override
+    @JSGetter
     public Node getLastChild() {
-        return null;  //To change body of implemented methods use File | Settings | File Templates.
+        return DomWrap.wrap(this.node.getLastChild(), this.getParentScope());
     }
 
     @Override
@@ -116,8 +90,9 @@ public class NodeWrapper extends ScriptableObject implements Node {
     }
 
     @Override
+    @JSGetter
     public NamedNodeMap getAttributes() {
-        return null;  //To change body of implemented methods use File | Settings | File Templates.
+        return DomWrap.wrap(this.node.getAttributes(), this.getParentScope());
     }
 
     @Override
@@ -145,9 +120,15 @@ public class NodeWrapper extends ScriptableObject implements Node {
         return null;  //To change body of implemented methods use File | Settings | File Templates.
     }
 
+    @JSFunction
+    public Node appendChild(NodeWrapper newChild) {
+        return DomWrap.wrap(this.node.appendChild(DomWrap.unwrap(newChild)), this.getParentScope());
+    }
+
     @Override
+    @JSFunction
     public boolean hasChildNodes() {
-        return false;  //To change body of implemented methods use File | Settings | File Templates.
+        return this.node.hasChildNodes();
     }
 
     @Override
@@ -254,5 +235,9 @@ public class NodeWrapper extends ScriptableObject implements Node {
     protected <T> T hintedWrap(Class<T> typeHint, Object o) {
         Context ctx = Context.getCurrentContext();
         return (T)ctx.getWrapFactory().wrap(ctx, this.getParentScope(), o, typeHint);
+    }
+
+    public Node getNode() {
+        return node;
     }
 }

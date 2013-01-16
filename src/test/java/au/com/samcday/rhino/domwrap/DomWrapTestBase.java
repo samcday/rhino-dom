@@ -2,6 +2,7 @@ package au.com.samcday.rhino.domwrap;
 
 import nu.validator.htmlparser.dom.HtmlDocumentBuilder;
 import org.junit.After;
+import org.junit.Assert;
 import org.junit.Before;
 import org.mozilla.javascript.Context;
 import org.mozilla.javascript.Function;
@@ -10,8 +11,6 @@ import org.mozilla.javascript.ScriptableObject;
 import org.w3c.dom.Document;
 
 import java.io.InputStreamReader;
-
-import org.junit.Assert;
 
 public class DomWrapTestBase {
     private ScriptableObject scope;
@@ -46,7 +45,7 @@ public class DomWrapTestBase {
             HtmlDocumentBuilder docBuilder = new HtmlDocumentBuilder();
             Document doc;
             doc = docBuilder.parse(this.getClass().getClassLoader().getResourceAsStream(testName + ".html"));
-            DocumentWrapper wrappedDoc = NodeWrapper.wrap(doc, this.scope);
+            DocumentWrapper wrappedDoc = DomWrap.wrap(doc, this.scope);
             cx.evaluateReader(this.scope, new InputStreamReader(this.getClass().getClassLoader().getResourceAsStream(testName + ".js")), testName + ".js", 1, null);
             this.scope.put("document", this.scope, wrappedDoc);
             ((Function)this.scope.get("runTest")).call(cx, this.scope, this.scope, new Object[0]);

@@ -8,11 +8,11 @@ import org.mozilla.javascript.annotations.JSFunction;
 import org.mozilla.javascript.annotations.JSGetter;
 import org.w3c.dom.*;
 
-public class WrappedElement extends NodeWrapper implements Element {
+public class ElementWrapper extends NodeWrapper implements Element {
     private Element element;
 
-    public WrappedElement() {}
-    public WrappedElement(Element element) {
+    public ElementWrapper() {}
+    public ElementWrapper(Element element) {
         super(element);
         this.element = element;
     }
@@ -23,7 +23,7 @@ public class WrappedElement extends NodeWrapper implements Element {
             throw Context.reportRuntimeError("Illegal constructor");
         }
         Element element = (Element)args[0];
-        return new WrappedElement(element);
+        return new ElementWrapper(element);
     }
 
     @Override

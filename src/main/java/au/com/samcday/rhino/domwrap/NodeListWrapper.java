@@ -10,11 +10,11 @@ import org.mozilla.javascript.annotations.JSGetter;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
-public class WrappedNodeList extends ScriptableObject implements NodeList {
+public class NodeListWrapper extends ScriptableObject implements NodeList {
     private NodeList nodeList;
 
-    @SuppressWarnings("unused") public WrappedNodeList() {}
-    public WrappedNodeList(NodeList list) {
+    @SuppressWarnings("unused") public NodeListWrapper() {}
+    public NodeListWrapper(NodeList list) {
         this.nodeList = list;
     }
 
@@ -24,15 +24,16 @@ public class WrappedNodeList extends ScriptableObject implements NodeList {
             throw Context.reportRuntimeError("Illegal constructor");
         }
         NodeList list = (NodeList)args[0];
-        return new WrappedNodeList(list);
+        return new NodeListWrapper(list);
     }
 
     @Override
     @JSFunction
     public Node item(int index) {
-        Context cx = Context.getCurrentContext();
+//        Context cx = Context.getCurrentContext();
 //        return cx.getWrapFactory().wrap(cx, this.getParentScope(), this.nodeList.item(index), Node.class);
-        return null;
+//        return null;
+        return DomWrap.wrap(this.nodeList.item(index), this.getParentScope());
     }
 
     @Override
