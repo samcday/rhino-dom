@@ -1,142 +1,83 @@
 package au.com.samcday.rhino.domwrap;
 
-import org.mozilla.javascript.Context;
-import org.mozilla.javascript.Function;
-import org.mozilla.javascript.Scriptable;
-import org.mozilla.javascript.annotations.JSConstructor;
 import org.mozilla.javascript.annotations.JSFunction;
-import org.mozilla.javascript.annotations.JSGetter;
 import org.w3c.dom.*;
 
-public class ElementWrapper extends NodeWrapper implements Element {
-    private Element element;
-
-    public ElementWrapper() {}
-    public ElementWrapper(Element element) {
-        super(element);
-        this.element = element;
-    }
-
-    @JSConstructor
-    public static Scriptable jsConstructor(Context cx, Object[] args, Function ctorObj, boolean inNewExpr) {
-        if(args.length != 1 || !(args[0] instanceof Element)) {
-            throw Context.reportRuntimeError("Illegal constructor");
-        }
-        Element element = (Element)args[0];
-        return new ElementWrapper(element);
-    }
-
+public class ElementWrapper extends NodeWrapper<Element> implements Element {
     @Override
-    public String getClassName() {
-        return "Element";
-    }
-
-    @Override
-    @JSGetter
-    public String getTagName() {
-        return this.element.getTagName();
-    }
+    @InstanceGetter
+    public native String getTagName();
 
     @Override
     @JSFunction
-    public String getAttribute(String name) {
-        return this.element.getAttribute(name);
-    }
+    public native String getAttribute(String name);
 
     @Override
     @JSFunction
-    public void setAttribute(String name, String value) throws DOMException {
-        this.element.setAttribute(name, value);
-    }
+    public native void setAttribute(String name, String value) throws DOMException;
 
     @Override
     @JSFunction
-    public void removeAttribute(String name) throws DOMException {
-        this.element.removeAttribute(name);
-    }
+    public native void removeAttribute(String name) throws DOMException;
 
     @Override
-    public Attr getAttributeNode(String name) {
-        return null;  //To change body of implemented methods use File | Settings | File Templates.
-    }
+    @JSFunction
+    public native Attr getAttributeNode(String name);
 
     @Override
-    public Attr setAttributeNode(Attr newAttr) throws DOMException {
-        return null;  //To change body of implemented methods use File | Settings | File Templates.
-    }
+    public native Attr setAttributeNode(Attr newAttr) throws DOMException;
+
+//    @WrappedJSFunction
+//    @JSFunction
+    public native Attr setAttributeNode(Object newAttr);
 
     @Override
-    public Attr removeAttributeNode(Attr oldAttr) throws DOMException {
-        return null;  //To change body of implemented methods use File | Settings | File Templates.
-    }
+    public native Attr removeAttributeNode(Attr oldAttr) throws DOMException;
 
     @Override
-    public NodeList getElementsByTagName(String name) {
-        return this.hintedWrap(NodeList.class, this.element.getElementsByTagName(name));
-    }
+    @JSFunction
+    public native NodeList getElementsByTagName(String name);
 
     @Override
-    public String getAttributeNS(String namespaceURI, String localName) throws DOMException {
-        return null;  //To change body of implemented methods use File | Settings | File Templates.
-    }
+    @JSFunction
+    public native String getAttributeNS(String namespaceURI, String localName) throws DOMException;
 
     @Override
-    public void setAttributeNS(String namespaceURI, String qualifiedName, String value) throws DOMException {
-        //To change body of implemented methods use File | Settings | File Templates.
-    }
+    @JSFunction
+    public native void setAttributeNS(String namespaceURI, String qualifiedName, String value) throws DOMException;
 
     @Override
-    public void removeAttributeNS(String namespaceURI, String localName) throws DOMException {
-        //To change body of implemented methods use File | Settings | File Templates.
-    }
+    @JSFunction
+    public native void removeAttributeNS(String namespaceURI, String localName) throws DOMException;
 
     @Override
-    public Attr getAttributeNodeNS(String namespaceURI, String localName) throws DOMException {
-        return null;  //To change body of implemented methods use File | Settings | File Templates.
-    }
+    @JSFunction
+    public native Attr getAttributeNodeNS(String namespaceURI, String localName) throws DOMException;
 
     @Override
-    public Attr setAttributeNodeNS(Attr newAttr) throws DOMException {
-        return null;  //To change body of implemented methods use File | Settings | File Templates.
-    }
+    public native Attr setAttributeNodeNS(Attr newAttr) throws DOMException;
 
     @Override
-    public NodeList getElementsByTagNameNS(String namespaceURI, String localName) throws DOMException {
-        return null;  //To change body of implemented methods use File | Settings | File Templates.
-    }
+    @JSFunction
+    public native NodeList getElementsByTagNameNS(String namespaceURI, String localName) throws DOMException;
 
     @Override
-    public boolean hasAttribute(String name) {
-        return false;  //To change body of implemented methods use File | Settings | File Templates.
-    }
+    @JSFunction
+    public native boolean hasAttribute(String name);
 
     @Override
-    public boolean hasAttributeNS(String namespaceURI, String localName) throws DOMException {
-        return false;  //To change body of implemented methods use File | Settings | File Templates.
-    }
+    @JSFunction
+    public native boolean hasAttributeNS(String namespaceURI, String localName) throws DOMException;
 
     @Override
-    public TypeInfo getSchemaTypeInfo() {
-        return null;  //To change body of implemented methods use File | Settings | File Templates.
-    }
+    public native TypeInfo getSchemaTypeInfo();
 
     @Override
-    public void setIdAttribute(String name, boolean isId) throws DOMException {
-        //To change body of implemented methods use File | Settings | File Templates.
-    }
+    public native void setIdAttribute(String name, boolean isId) throws DOMException;
 
     @Override
-    public void setIdAttributeNS(String namespaceURI, String localName, boolean isId) throws DOMException {
-        //To change body of implemented methods use File | Settings | File Templates.
-    }
+    public native void setIdAttributeNS(String namespaceURI, String localName, boolean isId) throws DOMException;
 
     @Override
-    public void setIdAttributeNode(Attr idAttr, boolean isId) throws DOMException {
-        //To change body of implemented methods use File | Settings | File Templates.
-    }
-
-    @Override
-    public String toString() {
-        return "[object Element]";
-    }
+    public native void setIdAttributeNode(Attr idAttr, boolean isId) throws DOMException;
 }

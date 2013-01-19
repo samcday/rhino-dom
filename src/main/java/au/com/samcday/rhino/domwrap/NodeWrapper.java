@@ -1,243 +1,172 @@
 package au.com.samcday.rhino.domwrap;
 
-import org.mozilla.javascript.*;
-import org.mozilla.javascript.annotations.JSConstructor;
 import org.mozilla.javascript.annotations.JSFunction;
-import org.mozilla.javascript.annotations.JSGetter;
-import org.mozilla.javascript.annotations.JSSetter;
 import org.w3c.dom.*;
-import org.w3c.dom.Node;
 
-public class NodeWrapper extends ScriptableObject implements Node {
-    private Node node;
-
-    public NodeWrapper() { }
-    public NodeWrapper(Node node) {
-        this.node = node;
-    }
-
-    @JSConstructor
-    public static Scriptable jsConstructor(Context cx, Object[] args, Function ctorObj, boolean inNewExpr) {
-        if(args.length != 1 || !(args[0] instanceof Node)) {
-            throw Context.reportRuntimeError("Illegal constructor");
-        }
-        Node node = (Node)args[0];
-        return new NodeWrapper(node);
-    }
+public class NodeWrapper<T extends Node> extends Wrapper<T> implements Node {
+    @Override
+    @InstanceGetter
+    public native String getNodeName();
 
     @Override
-    public String getClassName() {
-        return "Node";
-    }
+    @InstanceSetter
+    public native String getNodeValue() throws DOMException;
 
     @Override
-    @JSGetter
-    public String getNodeName() {
-        return this.node.getNodeName();
-    }
+    @InstanceSetter
+    public native void setNodeValue(String nodeValue) throws DOMException;
 
     @Override
-    @JSGetter
-    public String getNodeValue() throws DOMException {
-        return this.node.getNodeValue();
-    }
+    @InstanceGetter
+    public native short getNodeType();
 
     @Override
-    @JSSetter
-    public void setNodeValue(String nodeValue) throws DOMException {
-        this.node.setNodeValue(nodeValue);
-    }
+    @InstanceGetter
+    public native Node getParentNode();
 
     @Override
-    @JSGetter
-    public short getNodeType() {
-        return this.node.getNodeType();
-    }
+    @InstanceGetter
+    public native NodeList getChildNodes();
 
     @Override
-    @JSGetter
-    public Node getParentNode() {
-        return this.node.getParentNode();
-    }
+    @InstanceGetter
+    public native Node getFirstChild();
 
     @Override
-    @JSGetter
-    public NodeList getChildNodes() {
-        Context ctx = Context.getCurrentContext();
-        return (NodeList)Context.getCurrentContext().getWrapFactory().wrap(ctx, this.getParentScope(), this.node.getChildNodes(), NodeList.class);
-//        return this.node.getChildNodes();
-    }
+    @InstanceGetter
+    public native Node getLastChild();
 
     @Override
-    public Node getFirstChild() {
-        return null;  //To change body of implemented methods use File | Settings | File Templates.
-    }
+    @InstanceGetter
+    public native Node getPreviousSibling();
 
     @Override
-    @JSGetter
-    public Node getLastChild() {
-        return DomWrap.wrap(this.node.getLastChild(), this.getParentScope());
-    }
+    @InstanceGetter
+    public native Node getNextSibling();
 
     @Override
-    public Node getPreviousSibling() {
-        return null;  //To change body of implemented methods use File | Settings | File Templates.
-    }
+    @InstanceGetter
+    public native NamedNodeMap getAttributes();
 
     @Override
-    public Node getNextSibling() {
-        return null;  //To change body of implemented methods use File | Settings | File Templates.
-    }
+    @InstanceGetter
+    public native Document getOwnerDocument();
 
     @Override
-    @JSGetter
-    public NamedNodeMap getAttributes() {
-        return DomWrap.wrap(this.node.getAttributes(), this.getParentScope());
-    }
-
-    @Override
-    public Document getOwnerDocument() {
-        return null;  //To change body of implemented methods use File | Settings | File Templates.
-    }
-
-    @Override
-    public Node insertBefore(Node newChild, Node refChild) throws DOMException {
-        return null;  //To change body of implemented methods use File | Settings | File Templates.
-    }
-
-    @Override
-    public Node replaceChild(Node newChild, Node oldChild) throws DOMException {
-        return null;  //To change body of implemented methods use File | Settings | File Templates.
-    }
-
-    @Override
-    public Node removeChild(Node oldChild) throws DOMException {
-        return null;  //To change body of implemented methods use File | Settings | File Templates.
-    }
-
-    @Override
-    public Node appendChild(Node newChild) throws DOMException {
-        return null;  //To change body of implemented methods use File | Settings | File Templates.
-    }
+    public native Node insertBefore(Node newChild, Node refChild) throws DOMException;
 
     @JSFunction
-    public Node appendChild(NodeWrapper newChild) {
-        return DomWrap.wrap(this.node.appendChild(DomWrap.unwrap(newChild)), this.getParentScope());
-    }
+    @WrappedJSFunction
+    public native Node insertBefore(NodeWrapper newChild, NodeWrapper refChild);
+
+    @Override
+    public native Node replaceChild(Node newChild, Node oldChild) throws DOMException;
+
+    @JSFunction
+    @WrappedJSFunction
+    public native Node replaceChild(NodeWrapper newChild, NodeWrapper oldChild);
+
+    @Override
+    public native Node removeChild(Node oldChild) throws DOMException;
+
+    @JSFunction
+    @WrappedJSFunction
+    public native Node removeChild(NodeWrapper oldChild);
+
+    @Override
+    public native Node appendChild(Node newChild) throws DOMException;
+
+    @JSFunction
+    @WrappedJSFunction
+    public native Node appendChild(NodeWrapper newChild);
 
     @Override
     @JSFunction
-    public boolean hasChildNodes() {
-        return this.node.hasChildNodes();
-    }
-
-    @Override
-    public Node cloneNode(boolean deep) {
-        return null;  //To change body of implemented methods use File | Settings | File Templates.
-    }
-
-    @Override
-    public void normalize() {
-        //To change body of implemented methods use File | Settings | File Templates.
-    }
-
-    @Override
-    public boolean isSupported(String feature, String version) {
-        return false;  //To change body of implemented methods use File | Settings | File Templates.
-    }
-
-    @Override
-    public String getNamespaceURI() {
-        return null;  //To change body of implemented methods use File | Settings | File Templates.
-    }
-
-    @Override
-    public String getPrefix() {
-        return null;  //To change body of implemented methods use File | Settings | File Templates.
-    }
-
-    @Override
-    public void setPrefix(String prefix) throws DOMException {
-        //To change body of implemented methods use File | Settings | File Templates.
-    }
-
-    @Override
-    public String getLocalName() {
-        return null;  //To change body of implemented methods use File | Settings | File Templates.
-    }
-
-    @Override
-    public boolean hasAttributes() {
-        return false;  //To change body of implemented methods use File | Settings | File Templates.
-    }
-
-    @Override
-    public String getBaseURI() {
-        return null;  //To change body of implemented methods use File | Settings | File Templates.
-    }
-
-    @Override
-    public short compareDocumentPosition(Node other) throws DOMException {
-        return 0;  //To change body of implemented methods use File | Settings | File Templates.
-    }
-
-    @Override
-    public String getTextContent() throws DOMException {
-        return null;  //To change body of implemented methods use File | Settings | File Templates.
-    }
-
-    @Override
-    public void setTextContent(String textContent) throws DOMException {
-        //To change body of implemented methods use File | Settings | File Templates.
-    }
-
-    @Override
-    public boolean isSameNode(Node other) {
-        return false;  //To change body of implemented methods use File | Settings | File Templates.
-    }
-
-    @Override
-    public String lookupPrefix(String namespaceURI) {
-        return null;  //To change body of implemented methods use File | Settings | File Templates.
-    }
-
-    @Override
-    public boolean isDefaultNamespace(String namespaceURI) {
-        return false;  //To change body of implemented methods use File | Settings | File Templates.
-    }
+    public native boolean hasChildNodes();
 
     @Override
     @JSFunction
-    public String lookupNamespaceURI(String prefix) {
-        return null;  //To change body of implemented methods use File | Settings | File Templates.
-    }
+    public native Node cloneNode(boolean deep);
 
     @Override
-    public boolean isEqualNode(Node arg) {
-        return false;  //To change body of implemented methods use File | Settings | File Templates.
-    }
+    @JSFunction
+    public native void normalize();
 
     @Override
-    public Object getFeature(String feature, String version) {
-        return null;  //To change body of implemented methods use File | Settings | File Templates.
-    }
+    @JSFunction
+    public native boolean isSupported(String feature, String version);
 
     @Override
-    public Object setUserData(String key, Object data, UserDataHandler handler) {
-        return null;  //To change body of implemented methods use File | Settings | File Templates.
-    }
+    @InstanceGetter
+    public native String getNamespaceURI();
 
     @Override
-    public Object getUserData(String key) {
-        return null;  //To change body of implemented methods use File | Settings | File Templates.
-    }
+    @InstanceGetter
+    public native String getPrefix();
 
-    protected <T> T hintedWrap(Class<T> typeHint, Object o) {
-        Context ctx = Context.getCurrentContext();
-        return (T)ctx.getWrapFactory().wrap(ctx, this.getParentScope(), o, typeHint);
-    }
+    @Override
+    @InstanceSetter
+    public native void setPrefix(String prefix) throws DOMException;
 
-    public Node getNode() {
-        return node;
-    }
+    @Override
+    @InstanceGetter
+    public native String getLocalName();
+
+    @Override
+    @JSFunction
+    public native boolean hasAttributes();
+
+    @Override
+    @InstanceGetter
+    public native String getBaseURI();
+
+    @Override
+    public native short compareDocumentPosition(Node other) throws DOMException;
+
+    @JSFunction
+    @WrappedJSFunction
+    public native short compareDocumentPosition(NodeWrapper other);
+
+    @Override
+    @InstanceGetter
+    public native String getTextContent() throws DOMException;
+
+    @Override
+    @InstanceSetter
+    public native void setTextContent(String textContent) throws DOMException;
+
+    @Override
+    public native boolean isSameNode(Node other);
+
+    @JSFunction
+    @WrappedJSFunction
+    public native boolean isSameNode(NodeWrapper other);
+
+    @Override
+    @JSFunction
+    public native String lookupPrefix(String namespaceURI);
+
+    @Override
+    @JSFunction
+    public native boolean isDefaultNamespace(String namespaceURI);
+
+    @Override
+    @JSFunction
+    public native String lookupNamespaceURI(String prefix);
+
+    @Override
+    public native boolean isEqualNode(Node arg);
+
+    @JSFunction
+    @WrappedJSFunction
+    public native boolean isEqualNode(NodeWrapper arg);
+
+    @Override
+    public native Object getFeature(String feature, String version);
+
+    @Override
+    public native Object setUserData(String key, Object data, UserDataHandler handler);
+
+    @Override
+    public native Object getUserData(String key);
 }

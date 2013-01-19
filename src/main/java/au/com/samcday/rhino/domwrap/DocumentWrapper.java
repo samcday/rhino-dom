@@ -1,189 +1,135 @@
 package au.com.samcday.rhino.domwrap;
 
-import org.mozilla.javascript.Context;
-import org.mozilla.javascript.Function;
-import org.mozilla.javascript.Scriptable;
-import org.mozilla.javascript.annotations.JSConstructor;
 import org.mozilla.javascript.annotations.JSFunction;
 import org.w3c.dom.*;
 
-public class DocumentWrapper extends NodeWrapper implements Document {
-    private Document document;
-
-    public DocumentWrapper() { }
-    public DocumentWrapper(Document doc) {
-        super(doc);
-        this.document = doc;
-    }
-
-    @JSConstructor
-    public static Scriptable jsConstructor(Context cx, Object[] args, Function ctorObj, boolean inNewExpr) {
-        if(args.length != 1 || !(args[0] instanceof Document)) {
-            throw Context.reportRuntimeError("Illegal constructor");
-        }
-        Document doc = (Document)args[0];
-        return new DocumentWrapper(doc);
-    }
+public class DocumentWrapper<T extends Document> extends NodeWrapper<T> implements Document {
+    @Override
+    @InstanceGetter
+    public native DocumentType getDoctype();
 
     @Override
-    public String getClassName() {
-        return "Document";
-    }
+    @InstanceGetter
+    public native DOMImplementation getImplementation();
 
     @Override
-    public DocumentType getDoctype() {
-        return null;  //To change body of implemented methods use File | Settings | File Templates.
-    }
-
-    @Override
-    public DOMImplementation getImplementation() {
-        return null;  //To change body of implemented methods use File | Settings | File Templates.
-    }
-
-    @Override
-    public Element getDocumentElement() {
-        return null;  //To change body of implemented methods use File | Settings | File Templates.
-    }
-
-    @Override
-    public Element createElement(String tagName) throws DOMException {
-        return null;  //To change body of implemented methods use File | Settings | File Templates.
-    }
-
-    @Override
-    public DocumentFragment createDocumentFragment() {
-        return null;  //To change body of implemented methods use File | Settings | File Templates.
-    }
+    @InstanceGetter
+    public native Element getDocumentElement();
 
     @Override
     @JSFunction
-    public Text createTextNode(String data) {
-        return (Text) DomWrap.wrap(this.document.createTextNode(data), this.getParentScope());
-    }
-
-    @Override
-    public Comment createComment(String data) {
-        return null;  //To change body of implemented methods use File | Settings | File Templates.
-    }
-
-    @Override
-    public CDATASection createCDATASection(String data) throws DOMException {
-        return null;  //To change body of implemented methods use File | Settings | File Templates.
-    }
-
-    @Override
-    public ProcessingInstruction createProcessingInstruction(String target, String data) throws DOMException {
-        return null;  //To change body of implemented methods use File | Settings | File Templates.
-    }
-
-    @Override
-    public Attr createAttribute(String name) throws DOMException {
-        return null;  //To change body of implemented methods use File | Settings | File Templates.
-    }
-
-    @Override
-    public EntityReference createEntityReference(String name) throws DOMException {
-        return null;  //To change body of implemented methods use File | Settings | File Templates.
-    }
+    public native Element createElement(String tagName) throws DOMException;
 
     @Override
     @JSFunction
-    public NodeList getElementsByTagName(String tagname) {
-        return DomWrap.wrap(this.document.getElementsByTagName(tagname), this.getParentScope());
-    }
+    public native DocumentFragment createDocumentFragment();
 
     @Override
-    public Node importNode(Node importedNode, boolean deep) throws DOMException {
-        return null;  //To change body of implemented methods use File | Settings | File Templates.
-    }
+    @JSFunction
+    public native Text createTextNode(String data);
 
     @Override
-    public Element createElementNS(String namespaceURI, String qualifiedName) throws DOMException {
-        return null;  //To change body of implemented methods use File | Settings | File Templates.
-    }
+    @JSFunction
+    public native Comment createComment(String data);
 
     @Override
-    public Attr createAttributeNS(String namespaceURI, String qualifiedName) throws DOMException {
-        return null;  //To change body of implemented methods use File | Settings | File Templates.
-    }
+    @JSFunction
+    public native CDATASection createCDATASection(String data) throws DOMException;
 
     @Override
-    public NodeList getElementsByTagNameNS(String namespaceURI, String localName) {
-        return null;  //To change body of implemented methods use File | Settings | File Templates.
-    }
+    @JSFunction
+    public native ProcessingInstruction createProcessingInstruction(String target, String data) throws DOMException;
 
     @Override
-    public Element getElementById(String elementId) {
-        return null;  //To change body of implemented methods use File | Settings | File Templates.
-    }
+    @JSFunction
+    public native Attr createAttribute(String name) throws DOMException;
 
     @Override
-    public String getInputEncoding() {
-        return null;  //To change body of implemented methods use File | Settings | File Templates.
-    }
+    @JSFunction
+    public native EntityReference createEntityReference(String name) throws DOMException;
 
     @Override
-    public String getXmlEncoding() {
-        return null;  //To change body of implemented methods use File | Settings | File Templates.
-    }
+    @JSFunction
+    public native NodeList getElementsByTagName(String tagname);
 
     @Override
-    public boolean getXmlStandalone() {
-        return false;  //To change body of implemented methods use File | Settings | File Templates.
-    }
+    public native Node importNode(Node importedNode, boolean deep) throws DOMException;
+
+    @JSFunction
+    @WrappedJSFunction
+    public native Node importNode(NodeWrapper importedNode, boolean deep) throws DOMException;
 
     @Override
-    public void setXmlStandalone(boolean xmlStandalone) throws DOMException {
-        //To change body of implemented methods use File | Settings | File Templates.
-    }
+    @JSFunction
+    public native Element createElementNS(String namespaceURI, String qualifiedName) throws DOMException;
 
     @Override
-    public String getXmlVersion() {
-        return null;  //To change body of implemented methods use File | Settings | File Templates.
-    }
+    @JSFunction
+    public native Attr createAttributeNS(String namespaceURI, String qualifiedName) throws DOMException;
 
     @Override
-    public void setXmlVersion(String xmlVersion) throws DOMException {
-        //To change body of implemented methods use File | Settings | File Templates.
-    }
+    @JSFunction
+    public native NodeList getElementsByTagNameNS(String namespaceURI, String localName);
 
     @Override
-    public boolean getStrictErrorChecking() {
-        return false;  //To change body of implemented methods use File | Settings | File Templates.
-    }
+    @JSFunction
+    public native Element getElementById(String elementId);
 
     @Override
-    public void setStrictErrorChecking(boolean strictErrorChecking) {
-        //To change body of implemented methods use File | Settings | File Templates.
-    }
+    @InstanceGetter
+    public native String getInputEncoding();
 
     @Override
-    public String getDocumentURI() {
-        return null;  //To change body of implemented methods use File | Settings | File Templates.
-    }
+    @InstanceGetter
+    public native String getXmlEncoding();
 
     @Override
-    public void setDocumentURI(String documentURI) {
-        //To change body of implemented methods use File | Settings | File Templates.
-    }
+    @InstanceGetter
+    public native boolean getXmlStandalone();
 
     @Override
-    public Node adoptNode(Node source) throws DOMException {
-        return null;  //To change body of implemented methods use File | Settings | File Templates.
-    }
+    @InstanceSetter
+    public native void setXmlStandalone(boolean xmlStandalone) throws DOMException;
 
     @Override
-    public DOMConfiguration getDomConfig() {
-        return null;  //To change body of implemented methods use File | Settings | File Templates.
-    }
+    @InstanceGetter
+    public native String getXmlVersion();
 
     @Override
-    public void normalizeDocument() {
-        //To change body of implemented methods use File | Settings | File Templates.
-    }
+    @InstanceSetter
+    public native void setXmlVersion(String xmlVersion) throws DOMException;
 
     @Override
-    public Node renameNode(Node n, String namespaceURI, String qualifiedName) throws DOMException {
-        return null;  //To change body of implemented methods use File | Settings | File Templates.
-    }
+    @InstanceGetter
+    public native boolean getStrictErrorChecking();
+
+    @Override
+    @InstanceSetter
+    public native void setStrictErrorChecking(boolean strictErrorChecking);
+
+    @Override
+    @InstanceGetter
+    public native String getDocumentURI();
+
+    @Override
+    @InstanceSetter
+    public native void setDocumentURI(String documentURI);
+
+    @Override
+    public native Node adoptNode(Node source) throws DOMException;
+
+    @JSFunction
+    @WrappedJSFunction
+    public native Node adoptNode(NodeWrapper source);
+
+    @Override
+    @InstanceGetter
+    public native DOMConfiguration getDomConfig();
+
+    @Override
+    @JSFunction
+    public native void normalizeDocument();
+
+    @Override
+    public native Node renameNode(Node n, String namespaceURI, String qualifiedName) throws DOMException;
 }
