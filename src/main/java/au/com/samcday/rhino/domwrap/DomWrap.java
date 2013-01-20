@@ -32,6 +32,9 @@ public class DomWrap {
         this.put(ElementWrapper.class, Element.class);
         this.put(DocumentWrapper.class, Document.class);
         this.put(NodeListWrapper.class, NodeList.class);
+        this.put(NamedNodeMapWrapper.class, NamedNodeMap.class);
+        this.put(CharacterDataWrapper.class, CharacterData.class);
+        this.put(TextWrapper.class, Text.class);
     }};
 
     public static void init(ScriptableObject scope) throws IllegalAccessException, InstantiationException, InvocationTargetException {
