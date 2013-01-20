@@ -4,11 +4,10 @@ import com.google.common.cache.Cache;
 import com.google.common.cache.CacheBuilder;
 import com.google.common.cache.CacheLoader;
 import com.google.common.cache.LoadingCache;
-import org.mozilla.javascript.Context;
-import org.mozilla.javascript.FunctionObject;
-import org.mozilla.javascript.Scriptable;
-import org.mozilla.javascript.ScriptableObject;
+import org.mozilla.javascript.*;
 import org.w3c.dom.*;
+import org.w3c.dom.Node;
+import org.w3c.dom.html.HTMLElement;
 
 import java.lang.reflect.InvocationTargetException;
 import java.util.HashMap;
@@ -39,6 +38,9 @@ public class DomWrap {
         for(Class clazz : WRAPPER_TYPES.keySet()) {
             createProtoAndConstructor(scope, clazz);
         }
+
+        String exceptionClass = ScriptableObject.defineClass(scope, DOMExceptionWrapper.class, false, false);
+        ScriptableObject.getClassPrototype(scope, exceptionClass).setPrototype(TopLevel.getBuiltinPrototype(scope, TopLevel.Builtins.Error));
     }
 
     private static void createProtoAndConstructor(ScriptableObject scope, Class clazz) throws IllegalAccessException, InstantiationException, InvocationTargetException {
@@ -48,21 +50,36 @@ public class DomWrap {
     }
 
     public static Scriptable newWrap(Node node, Scriptable scope) {
-        String className = "Node";
+        Class clazz = Node.class;
         if(node instanceof Element) {
-            className = "Element";
+            clazz = Element.class;
         }
         else if(node instanceof Document) {
-            className = "Document";
+            clazz = Document.class;
         }
-        return doWrap(node, className, scope);
+        return doWrap(node, scope, clazz);
     }
 
     public static Scriptable newWrap(NodeList nodeList, Scriptable scope) {
-        return doWrap(nodeList, "NodeList", scope);
+        return doWrap(nodeList, scope, NodeList.class);
     }
 
-    private static Scriptable doWrap(Object obj, String className, Scriptable scope) {
+    static Scriptable doWrap(Object obj, Scriptable scope, Class typeHint) {
+        if(obj == null) return null;
+
+        if(typeHint == Node.class) {
+            if(obj instanceof Element) {
+                typeHint = Element.class;
+            }
+        }
+
+        if(typeHint == Element.class) {
+            if(obj instanceof HTMLElement) {
+                typeHint = HTMLElement.class;
+            }
+        }
+
+        String className = typeHint.getSimpleName();
         Cache<Object, Scriptable> cache = cachedWrappers.getUnchecked(className);
         Scriptable wrapper = cache.getIfPresent(obj);
         if(wrapper != null) {

@@ -2,8 +2,12 @@ package au.com.samcday.rhino.domwrap;
 
 import org.mozilla.javascript.Scriptable;
 import org.mozilla.javascript.ScriptableObject;
+import org.w3c.dom.DOMException;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
+
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 
 public abstract class Wrapper<T> extends ScriptableObject {
     protected T wrapped;
@@ -25,6 +29,18 @@ public abstract class Wrapper<T> extends ScriptableObject {
             return DomWrap.newWrap((Node)obj, scope);
         }
         return obj;
+    }
+
+    public static Object invokeWrapped(Method method, Object instance, Scriptable scope, Object... args) throws Throwable {
+        try {
+            return DomWrap.doWrap(method.invoke(instance, args), scope, method.getReturnType());
+        }
+        catch(InvocationTargetException ite) {
+            if(ite.getTargetException() instanceof DOMException) {
+                throw DOMExceptionWrapper.create(scope, (DOMException)ite.getTargetException());
+            }
+            throw ite.getTargetException();
+        }
     }
 
     public void init(Class wrapperClass) {

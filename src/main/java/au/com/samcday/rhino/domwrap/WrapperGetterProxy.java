@@ -50,6 +50,6 @@ public class WrapperGetterProxy implements MethodInterceptor {
             return methodProxy.invokeSuper(thiz, args);
         }
         Object wrapped = ((Wrapper)thiz).getWrappedObject();
-        return Wrapper.wrap(getter.invoke(wrapped), scope);
+        return Wrapper.invokeWrapped(getter, wrapped, scope);
     }
 }
