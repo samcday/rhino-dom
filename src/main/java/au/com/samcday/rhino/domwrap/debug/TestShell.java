@@ -34,7 +34,7 @@ public class TestShell {
                     HtmlDocumentBuilder docBuilder = new HtmlDocumentBuilder(new MyHTMLDOMImplementation());
                     Document doc;
                     try {
-                        doc = docBuilder.parse(new ByteArrayInputStream("<!doctype html><html><head><title>Test</title></head><body></body></html>".getBytes()));
+                        doc = docBuilder.parse(new ByteArrayInputStream("<!doctype html><html><head><title>Test</title></head><body attr='attribute'></body></html>".getBytes()));
                         DomWrap.init(Main.getGlobal());
                     }
                     catch(Exception e) {

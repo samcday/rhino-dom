@@ -28,13 +28,20 @@ public class DomWrap {
     }
 
     static final HashMap<Class<? extends Wrapper>, Class> WRAPPER_TYPES = new HashMap<Class<? extends Wrapper>, Class>() {{
-        this.put(NodeWrapper.class, Node.class);
-        this.put(ElementWrapper.class, Element.class);
-        this.put(DocumentWrapper.class, Document.class);
         this.put(NodeListWrapper.class, NodeList.class);
         this.put(NamedNodeMapWrapper.class, NamedNodeMap.class);
+
+        this.put(NodeWrapper.class, Node.class);
+
         this.put(CharacterDataWrapper.class, CharacterData.class);
+        this.put(CommentWrapper.class, Comment.class);
         this.put(TextWrapper.class, Text.class);
+        this.put(CDATASectionWrapper.class, CDATASection.class);
+
+        this.put(ElementWrapper.class, Element.class);
+        this.put(DocumentWrapper.class, Document.class);
+        this.put(DocumentFragmentWrapper.class, DocumentFragment.class);
+        this.put(AttrWrapper.class, Attr.class);
     }};
 
     public static void init(ScriptableObject scope) throws IllegalAccessException, InstantiationException, InvocationTargetException {
@@ -60,25 +67,50 @@ public class DomWrap {
         else if(node instanceof Document) {
             clazz = Document.class;
         }
-        return doWrap(node, scope, clazz);
+        return (Scriptable)doWrap(node, scope, clazz);
     }
 
     public static Scriptable newWrap(NodeList nodeList, Scriptable scope) {
-        return doWrap(nodeList, scope, NodeList.class);
+        return (Scriptable)doWrap(nodeList, scope, NodeList.class);
     }
 
-    static Scriptable doWrap(Object obj, Scriptable scope, Class typeHint) {
+    static Object doWrap(Object obj, Scriptable scope, Class typeHint) {
         if(obj == null) return null;
+        if(typeHint != null && !WRAPPER_TYPES.containsValue(typeHint)) return obj;
 
         if(typeHint == Node.class) {
             if(obj instanceof Element) {
                 typeHint = Element.class;
+            }
+            else if(obj instanceof Attr) {
+                typeHint = Attr.class;
+            }
+            else if(obj instanceof CharacterData) {
+                typeHint = CharacterData.class;
+            }
+            else if(obj instanceof DocumentFragment) {
+                typeHint = DocumentFragment.class;
             }
         }
 
         if(typeHint == Element.class) {
             if(obj instanceof HTMLElement) {
                 typeHint = HTMLElement.class;
+            }
+        }
+
+        if(typeHint == CharacterData.class) {
+            if(obj instanceof Text) {
+                typeHint = Text.class;
+            }
+            else if(obj instanceof Comment) {
+                typeHint = Comment.class;
+            }
+        }
+
+        if(typeHint == Text.class) {
+            if(obj instanceof CDATASection) {
+                typeHint = CDATASection.class;
             }
         }
 

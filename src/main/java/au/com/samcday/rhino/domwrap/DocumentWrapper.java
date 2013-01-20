@@ -34,7 +34,7 @@ public class DocumentWrapper<T extends Document> extends NodeWrapper<T> implemen
 
     @Override
     @JSFunction
-    public native CDATASection createCDATASection(String data) throws DOMException;
+    public native CDATASectionWrapper createCDATASection(String data) throws DOMException;
 
     @Override
     @JSFunction

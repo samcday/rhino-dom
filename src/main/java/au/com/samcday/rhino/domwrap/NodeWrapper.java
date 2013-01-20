@@ -9,7 +9,7 @@ public class NodeWrapper<T extends Node> extends Wrapper<T> implements Node {
     public native String getNodeName();
 
     @Override
-    @InstanceSetter
+    @InstanceGetter
     public native String getNodeValue() throws DOMException;
 
     @Override
