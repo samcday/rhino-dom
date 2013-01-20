@@ -42,6 +42,8 @@ public class DomWrap {
         this.put(DocumentWrapper.class, Document.class);
         this.put(DocumentFragmentWrapper.class, DocumentFragment.class);
         this.put(AttrWrapper.class, Attr.class);
+
+        this.put(EntityReferenceWrapper.class, EntityReference.class);
     }};
 
     public static void init(ScriptableObject scope) throws IllegalAccessException, InstantiationException, InvocationTargetException {
@@ -90,6 +92,9 @@ public class DomWrap {
             }
             else if(obj instanceof DocumentFragment) {
                 typeHint = DocumentFragment.class;
+            }
+            else if(obj instanceof EntityReference) {
+                typeHint = EntityReference.class;
             }
         }
 
