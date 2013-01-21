@@ -9,12 +9,16 @@ import java.util.Arrays;
 
 public class WrapperCallbackFilter implements CallbackFilter {
     private static Object[] GETTER_SIGNATURE = new Object[] { String.class, Scriptable.class };
+    private static Object[] SETTER_SIGNATURE = new Object[] { String.class, Scriptable.class, Object.class };
     public static WrapperCallbackFilter INSTANCE = new WrapperCallbackFilter();
 
     private WrapperCallbackFilter() { }
 
     @Override
     public int accept(Method method) {
+        if(method.getName().equals("put") && Arrays.equals(method.getParameterTypes(), SETTER_SIGNATURE)) {
+            return 3;
+        }
         if(method.getName().equals("get") && Arrays.equals(method.getParameterTypes(), GETTER_SIGNATURE)) {
             return 2;
         }

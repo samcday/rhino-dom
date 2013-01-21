@@ -27,12 +27,16 @@ public class ElementWrapper extends NodeWrapper<Element> implements Element {
     @Override
     public native Attr setAttributeNode(Attr newAttr) throws DOMException;
 
-//    @WrappedJSFunction
-//    @JSFunction
-    public native Attr setAttributeNode(Object newAttr);
+    @WrappedJSFunction
+    @JSFunction
+    public native Attr setAttributeNode(AttrWrapper newAttr);
 
     @Override
     public native Attr removeAttributeNode(Attr oldAttr) throws DOMException;
+
+    @WrappedJSFunction
+    @JSFunction
+    public native Attr removeAttributeNode(AttrWrapper oldAttr);
 
     @Override
     @JSFunction

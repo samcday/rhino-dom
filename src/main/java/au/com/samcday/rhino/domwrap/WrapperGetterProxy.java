@@ -41,12 +41,11 @@ public class WrapperGetterProxy implements MethodInterceptor {
         String propertyName = (String)args[0];
         Scriptable scope = (Scriptable)args[1];
 
-        if(propertyName == "toString") {
-            return new FunctionObject("toString", Wrapper.class.getMethod("toString"), scope);
-        }
-
         Method getter = this.getterRegistry.get(propertyName);
         if(getter == null) {
+            if(propertyName == "toString") {
+                return new FunctionObject("toString", Wrapper.class.getMethod("toString"), scope);
+            }
             return methodProxy.invokeSuper(thiz, args);
         }
         Object wrapped = ((Wrapper)thiz).getWrappedObject();

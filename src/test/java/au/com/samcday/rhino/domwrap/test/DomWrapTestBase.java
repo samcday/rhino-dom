@@ -23,13 +23,17 @@ public class DomWrapTestBase {
         cx.setOptimizationLevel(0);
         this.scope = cx.initStandardObjects();
         DomWrap.init(this.scope);
-        this.scope.defineFunctionProperties(new String[] { "assertNull", "assertNotNull", "assertEquals", "assertTrue", "assertSize", "load" }, DomWrapTestBase.class, 0);
+        this.scope.defineFunctionProperties(new String[] { "assertNull", "assertNotNull", "assertEquals", "assertTrue", "assertFalse", "assertSize", "load", "fail" }, DomWrapTestBase.class, 0);
     }
 
     private static Object getAssertionParam(Object obj) {
         if(obj == Context.getUndefinedValue()) return null;
         if(obj instanceof Number) return ((Number)obj).doubleValue();
         return obj;
+    }
+
+    public static void fail(Context cx, Scriptable thisObj, Object[] args, Function funObj) {
+        throw new AssertionError("asd");
     }
 
     public static void assertNotNull(Context cx, Scriptable thisObj, Object[] args, Function funObj) {
@@ -48,6 +52,10 @@ public class DomWrapTestBase {
         Assert.assertTrue((String)args[0], (Boolean)getAssertionParam(args[1]));
     }
 
+    public static void assertFalse(Context cx, Scriptable thisObj, Object[] args, Function funObj) {
+        Assert.assertFalse((String)args[0], (Boolean)getAssertionParam(args[1]));
+    }
+
     public static void assertSize(Context cx, Scriptable thisObj, Object[] args, Function funObj) {
         Integer expectedSize = ((Number)args[1]).intValue();
         Scriptable obj = (Scriptable)args[2];
@@ -59,6 +67,7 @@ public class DomWrapTestBase {
         HtmlDocumentBuilder docBuilder = new HtmlDocumentBuilder();
         Document doc;
         doc = docBuilder.parse(DomWrapTestBase.class.getClassLoader().getResourceAsStream("files/" + docName + ".html"));
+        doc.appendChild(doc.getImplementation().createDocumentType("html", "", ""));
         Scriptable wrappedDoc = DomWrap.newWrap(doc, thisObj);
         return wrappedDoc;
     }

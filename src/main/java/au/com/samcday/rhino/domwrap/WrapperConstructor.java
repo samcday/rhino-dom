@@ -15,7 +15,7 @@ public class WrapperConstructor extends ScriptableObject {
             throw Context.reportRuntimeError("Illegal construction.");
         }
         Class clazz = ctorObj.get("prototype", ctorObj).getClass();
-        Wrapper inst = (Wrapper)Enhancer.create(clazz, null, WrapperCallbackFilter.INSTANCE, new Callback[] { NoOp.INSTANCE, new WrapperProxy(), WrapperGetterProxy.get(clazz) });
+        Wrapper inst = (Wrapper)Enhancer.create(clazz, null, WrapperCallbackFilter.INSTANCE, new Callback[] { NoOp.INSTANCE, new WrapperProxy(), WrapperGetterProxy.get(clazz), WrapperSetterProxy.get(clazz) });
         inst.init(clazz);
         return inst;
     }

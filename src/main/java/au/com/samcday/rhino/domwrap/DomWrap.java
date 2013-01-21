@@ -44,6 +44,7 @@ public class DomWrap {
         this.put(AttrWrapper.class, Attr.class);
 
         this.put(EntityReferenceWrapper.class, EntityReference.class);
+        this.put(DocumentTypeWrapper.class, DocumentType.class);
     }};
 
     public static void init(ScriptableObject scope) throws IllegalAccessException, InstantiationException, InvocationTargetException {
@@ -95,6 +96,9 @@ public class DomWrap {
             }
             else if(obj instanceof EntityReference) {
                 typeHint = EntityReference.class;
+            }
+            else if(obj instanceof DocumentType) {
+                typeHint = DocumentType.class;
             }
         }
 
