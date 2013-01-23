@@ -45,6 +45,8 @@ public class DomWrap {
 
         this.put(EntityReferenceWrapper.class, EntityReference.class);
         this.put(DocumentTypeWrapper.class, DocumentType.class);
+
+        this.put(HTMLElementWrapper.class, HTMLElement.class);
     }};
 
     public static void init(ScriptableObject scope) throws IllegalAccessException, InstantiationException, InvocationTargetException {

@@ -3,7 +3,7 @@ package au.com.samcday.rhino.domwrap;
 import org.mozilla.javascript.annotations.JSFunction;
 import org.w3c.dom.*;
 
-public class ElementWrapper extends NodeWrapper<Element> implements Element {
+public class ElementWrapper<T extends Element> extends NodeWrapper<T> implements Element {
     @Override
     @InstanceGetter
     public native String getTagName();
