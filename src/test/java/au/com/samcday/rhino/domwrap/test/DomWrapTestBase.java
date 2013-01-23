@@ -2,6 +2,7 @@ package au.com.samcday.rhino.domwrap.test;
 
 import au.com.samcday.rhino.domwrap.DomWrap;
 import nu.validator.htmlparser.dom.HtmlDocumentBuilder;
+import org.cyberneko.html.parsers.DOMParser;
 import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
@@ -10,6 +11,7 @@ import org.mozilla.javascript.Function;
 import org.mozilla.javascript.Scriptable;
 import org.mozilla.javascript.ScriptableObject;
 import org.w3c.dom.Document;
+import org.xml.sax.InputSource;
 
 import java.io.File;
 import java.io.InputStreamReader;
@@ -66,8 +68,11 @@ public class DomWrapTestBase {
         String docName = (String)args[0];
         HtmlDocumentBuilder docBuilder = new HtmlDocumentBuilder();
         Document doc;
-        doc = docBuilder.parse(DomWrapTestBase.class.getClassLoader().getResourceAsStream("files/" + docName + ".html"));
-        doc.appendChild(doc.getImplementation().createDocumentType("html", "", ""));
+//        doc = docBuilder.parse(DomWrapTestBase.class.getClassLoader().getResourceAsStream("files/" + docName + ".html"));
+        DOMParser parser = new DOMParser();
+        parser.parse(new InputSource(DomWrapTestBase.class.getClassLoader().getResourceAsStream("files/" + docName + ".html")));
+        doc = parser.getDocument();
+//        doc.appendChild(doc.getImplementation().createDocumentType("html", "", ""));
         Scriptable wrappedDoc = DomWrap.newWrap(doc, thisObj);
         return wrappedDoc;
     }
@@ -83,7 +88,7 @@ public class DomWrapTestBase {
             cx.evaluateReader(this.scope, new InputStreamReader(cl.getResourceAsStream("testsupport.js")), "testsupport.js", 1, null);
             cx.evaluateReader(this.scope, new InputStreamReader(cl.getResourceAsStream(testName + ".js")), testFile.getName() + ".js", 1, null);
             Scriptable builder = cx.newObject(this.scope);
-            builder.put("contentType", builder, "");
+            builder.put("contentType", builder, "text/html");
             this.scope.put("builder", this.scope, builder);
 
             ((Function)this.scope.get("runTest")).call(cx, this.scope, this.scope, new Object[0]);
